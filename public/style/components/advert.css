@@ -1,0 +1,16 @@
+.ad-div {
+    margin-top: .5rem;
+}
+
+.ad-div div {
+    border-radius: .3rem;
+    margin-bottom: .5rem;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+/* .ad-div div :hover {
+    width: 98%;
+    height: 98%;
+    box-shadow: 8px 4px 4px #666;
+} */
