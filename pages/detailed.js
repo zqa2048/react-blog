@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Head from "next/head";
-import { List, Row, Col, Icon, Breadcrumb } from "antd";
+import { List, Affix, Row, Col, Icon, Breadcrumb } from "antd";
 import ReactMarkdown from "react-markdown";
 import MarkNav from "markdown-navbar";
 import "markdown-navbar/dist/navbar.css";
@@ -33,7 +33,7 @@ const Detailed = () => {
     "> aaaaaaaaa\n" +
     ">> bbbbbbbbb\n" +
     ">>> cccccccccc\n\n" +
-    "#5 p05:Vue3.0基础知识讲解\n" +
+    "# 5 p05:Vue3.0基础知识讲解\n" +
     "> aaaaaaaaa\n" +
     ">> bbbbbbbbb\n" +
     ">>> cccccccccc\n\n" +
@@ -86,7 +86,16 @@ const Detailed = () => {
         <Col className="comm-right" xs={5} sm={5} md={5} lg={5} xl={4}>
           <Author />
           <Advert />
-          <div className="detailed-nav comm-box"></div>
+          <Affix offsetTop={5}>
+            <div className="detailed-nav comm-box">
+            <div className="nac-title">文章目录</div>
+            <MarkNav
+              className="article-menu"
+              source={markdown}
+              ordered={false}
+            />
+          </div>
+          </Affix>
         </Col>
       </Row>
       {/* <style jsx>{`
@@ -94,6 +103,6 @@ const Detailed = () => {
       <Footer />
     </div>
   );
-};
+}
 
 export default Detailed;
