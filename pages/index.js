@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Head from "next/head";
+import Link from "next/link"
 import axios from "axios";
 import { List, Row, Col, Icon } from "antd";
 import Header from "../components/Header";
@@ -8,9 +9,9 @@ import Author from "../components/Author";
 import Advert from "../components/Advert";
 import Footer from "../components/Footer";
 
-const Home = (myList) => {
-  console.log('myList', myList)
-  const [list, setList] = useState(myList.data)
+const Home = myList => {
+  console.log("myList", myList);
+  const [list, setList] = useState(myList.data);
   return (
     <div>
       <Head>
@@ -25,7 +26,11 @@ const Home = (myList) => {
             dataSource={list}
             renderItem={item => (
               <List.Item>
-                <div className="list-title"><a >{item.title}</a></div>
+                <div className="list-title">
+                  <Link href={{pathname:'/detailed',query:{id:item.id}}}  >
+                  <a>{item.title}</a>
+                  </Link>
+                </div>
                 <div className="list-icon">
                   <span>
                     <Icon type="calendar" /> {item.addTime}
@@ -55,19 +60,14 @@ const Home = (myList) => {
   );
 };
 
-
-Home.getInitialProps = async ()=>{
-    const promise = new Promise((resolve)=>{
-            // http://127.0.0.1:7001/default/getArticleList
-        axios('http://127.0.0.1:7001/default/getArticleList')
-        .then(
-            (res)=>{
-              resolve(res.data)
-              // console.log('远程获取数据结果:',res.data.data)
-              
-            }
-        )
-    })
-    return await promise
-}
+Home.getInitialProps = async () => {
+  const promise = new Promise(resolve => {
+    // http://127.0.0.1:7001/default/getArticleList
+    axios("http://127.0.0.1:7002/default/getArticleList").then(res => {
+      resolve(res.data);
+      // console.log('远程获取数据结果:',res.data.data)
+    });
+  });
+  return await promise;
+};
 export default Home;

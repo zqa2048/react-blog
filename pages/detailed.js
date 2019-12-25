@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Head from "next/head";
+import axios from 'axios'
 import { List, Affix, Row, Col, Icon, Breadcrumb } from "antd";
 import ReactMarkdown from "react-markdown";
 import MarkNav from "markdown-navbar";
@@ -104,5 +105,20 @@ const Detailed = () => {
     </div>
   );
 }
+
+Detailed.getInitialProps = async(context)=>{
+  console.log(context.query.id)
+  let id = context.query.id
+  const promise = new Promise((resolve)=>{
+    axios('http://127.0.0.7002/default/getArticleById/'+id).then(
+      (res)=>{
+        console.log(title)
+        resolve(res.data.data[0])
+      }
+    )
+  })
+  return promise
+}
+
 
 export default Detailed;
