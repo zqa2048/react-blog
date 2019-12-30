@@ -2,51 +2,39 @@ import React, { useState } from "react";
 import Head from "next/head";
 import axios from 'axios'
 import { List, Affix, Row, Col, Icon, Breadcrumb } from "antd";
-import ReactMarkdown from "react-markdown";
-import MarkNav from "markdown-navbar";
+import Tocify from '../components/tocify.tsx'
 import "markdown-navbar/dist/navbar.css";
+import marked from 'marked'
+import hljs from 'highlight.js'
+import  'highlight.js/styles/monokai-sublime.css'
+import servicePath from '../config/apiUrl'
 
 import Header from "../components/Header";
 import Author from "../components/Author";
 import Advert from "../components/Advert";
 import Footer from "../components/Footer";
 import "../public/style/pages/detailed.css";
-const Detailed = () => {
-  let markdown =
-    "# P01:课程介绍和环境搭建\n" +
-    "[ **M** ] arkdown + E [ **ditor** ] = **Mditor**  \n" +
-    "> Mditor 是一个简洁、易于集成、方便扩展、期望舒服的编写 markdown 的编辑器，仅此而已... \n\n" +
-    "**这是加粗的文字**\n\n" +
-    "*这是倾斜的文字*`\n\n" +
-    "***这是斜体加粗的文字***\n\n" +
-    "~~这是加删除线的文字~~ \n\n" +
-    "`console.log(111)` \n\n" +
-    "# p02:来个Hello World 初始Vue3.0\n" +
-    "> aaaaaaaaa\n" +
-    ">> bbbbbbbbb\n" +
-    ">>> cccccccccc\n" +
-    "***\n\n\n" +
-    "# p03:Vue3.0基础知识讲解\n" +
-    "> aaaaaaaaa\n" +
-    ">> bbbbbbbbb\n" +
-    ">>> cccccccccc\n\n" +
-    "# p04:Vue3.0基础知识讲解\n" +
-    "> aaaaaaaaa\n" +
-    ">> bbbbbbbbb\n" +
-    ">>> cccccccccc\n\n" +
-    "# 5 p05:Vue3.0基础知识讲解\n" +
-    "> aaaaaaaaa\n" +
-    ">> bbbbbbbbb\n" +
-    ">>> cccccccccc\n\n" +
-    "# p06:Vue3.0基础知识讲解\n" +
-    "> aaaaaaaaa\n" +
-    ">> bbbbbbbbb\n" +
-    ">>> cccccccccc\n\n" +
-    "# p07:Vue3.0基础知识讲解\n" +
-    "> aaaaaaaaa\n" +
-    ">> bbbbbbbbb\n" +
-    ">>> cccccccccc\n\n" +
-    "``` var a=11; ```";
+const Detailed = (props) => {
+  const [list, setList] = useState(props)
+  const renderer = new marked.Renderer()
+  const tocify = new Tocify()
+  renderer.heading = function(text,level,raw){
+    const anchor = tocify.add(text,level);
+    return `<a id="${anchor}" href="#${anchor}" class="anchor-fix"><h${level}>${text}</h${level}></a>\n`;
+  }
+  marked.setOptions({
+    renderer:renderer,  //这个是必填的，你可以通过自定义的renderer渲染出自定义的格式
+    gfm:true, //启动类似github样式的markdown的解析方法，
+    pedantic:false, //true只解析符合markdown定义的内容，false可以增加容错率
+    sanitize:false, //原始输出，忽略HTML标签，这个建议开发人员填false
+    tables:true, //支持github形式的表格，必须打开gfm
+    breaks:false, //支持github换行符，必须打开gfm
+    smartLists:true, //优化列表输出，这个填true之后，你的样式会好看很多
+    highlight:function(code){
+      return hljs.highlightAuto(code).value      //高亮显示规则，这里我们用插件highlight.js来完成
+    }
+  })
+  let markdown = marked(list.article_content)
 
   return (
     <div>
@@ -67,21 +55,23 @@ const Detailed = () => {
           </div>
 
           <div>
-            <h2 className="center">react 实战教程 小菜鸟(第10集)</h2>
+            <h2 className="center">{list.title}</h2>
           </div>
           <div className="list-icon center">
             <span>
-              <Icon type="calendar" /> 2019-12-21
+              <Icon type="calendar" /> {list.addTime}
             </span>
             <span>
-              <Icon type="folder" /> 视频教程
+              <Icon type="folder" /> {list.typeName}
             </span>
             <span>
-              <Icon type="fire" /> 5021人
+              <Icon type="fire" /> {list.view_count}人
             </span>
           </div>
-          <div className="detailed-context">
-            <ReactMarkdown source={markdown} escapeHtml={false} />
+          <div className="detailed-context"
+            dangerouslySetInnerHTML={{__html:markdown}}
+          >
+
           </div>
         </Col>
         <Col className="comm-right" xs={5} sm={5} md={5} lg={5} xl={4}>
@@ -90,33 +80,36 @@ const Detailed = () => {
           <Affix offsetTop={5}>
             <div className="detailed-nav comm-box">
             <div className="nac-title">文章目录</div>
-            <MarkNav
+            {/* <MarkNav
               className="article-menu"
               source={markdown}
               ordered={false}
-            />
+            /> */}
+            <div className="toc-list">
+              {tocify && tocify.render()}
+            </div>
           </div>
           </Affix>
         </Col>
       </Row>
-      {/* <style jsx>{`
-    `}</style> */}
       <Footer />
     </div>
   );
 }
 
 Detailed.getInitialProps = async(context)=>{
-  console.log(context.query.id)
+  
   let id = context.query.id
+  console.log(id)
   const promise = new Promise((resolve)=>{
-    axios('http://127.0.0.7002/default/getArticleById/'+id).then(
+    axios(servicePath.getArticleById+id).then(
       (res)=>{
-        console.log(title)
+        console.log(res.data.data[0])
         resolve(res.data.data[0])
       }
     )
   })
+  console.log(promise)
   return promise
 }
 

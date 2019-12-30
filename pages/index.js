@@ -8,6 +8,7 @@ import "../public/style/pages/index.css";
 import Author from "../components/Author";
 import Advert from "../components/Advert";
 import Footer from "../components/Footer";
+import servicePath from '../config/apiUrl'
 
 const Home = myList => {
   console.log("myList", myList);
@@ -63,9 +64,9 @@ const Home = myList => {
 Home.getInitialProps = async () => {
   const promise = new Promise(resolve => {
     // http://127.0.0.1:7001/default/getArticleList
-    axios("http://127.0.0.1:7002/default/getArticleList").then(res => {
+    axios(servicePath.getArticleList).then(res => {
       resolve(res.data);
-      // console.log('远程获取数据结果:',res.data.data)
+      console.log('远程获取数据结果:',res.data.data)
     });
   });
   return await promise;
