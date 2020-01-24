@@ -3,3 +3,7 @@ GET https://www.baidu.com
 ###
 
 GET http://127.0.0.1:7001/default/getArticleList
+
+
+###
+GET http://127.0.0.1:7001/default/getTypeInfo
