@@ -7,3 +7,16 @@ GET http://127.0.0.1:7001/default/getArticleList
 
 ###
 GET http://127.0.0.1:7001/default/getTypeInfo
+
+
+###
+// 请求首行
+
+POST http://127.0.0.1:7001/admin/checkLogin HTTP/1.1
+
+//请求头信息
+// 这里是空行
+
+//POST有请求正文
+
+userName=xiaozhou&password=123456
