@@ -7,9 +7,9 @@ const Author = () => {
             <div className="author-introduction">
                 菜鸟小周的学习经历,搭建一个React Hooks + Next + Egg.js 为基础的博客管理系统
                 <Divider>社交帐号</Divider>
-                <Avatar size={28} icon="github" className="account"/>
-                <Avatar size={28} icon="qq" className="account"/>
-                <Avatar size={28} icon="wechat" className="account"/>
+                <Avatar size={28} icon="github" />
+                <Avatar size={28} icon="qq" />
+                <Avatar size={28} icon="wechat" />
             </div>
         </div>
     )
